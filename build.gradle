@@ -18,8 +18,14 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.3.0'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '3.2.3'
+	implementation 'com.google.guava:guava:33.0.0-jre'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+bootRun {
+
 }

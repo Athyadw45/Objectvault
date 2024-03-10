@@ -3,6 +3,7 @@
 *.ipr
 *.iws
 *.jar
+!gradle/wrapper/gradle-wrapper.jar
 *.sw?
 *~
 .#*

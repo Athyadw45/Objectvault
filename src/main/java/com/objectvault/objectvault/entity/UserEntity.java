@@ -29,11 +29,11 @@ public class UserEntity {
     private String userid;
 
     @NonNull
-    @Column(name="first_name")
-    private String first_name;
+    @Column(name="firstname")
+    private String firstname;
 
-    @Column(name="last_name")
-    private String last_name;
+    @Column(name="lastname")
+    private String lastname;
 
     @NonNull
     @Column(name="email")

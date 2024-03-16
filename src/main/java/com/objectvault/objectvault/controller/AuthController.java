@@ -6,11 +6,14 @@ import com.objectvault.objectvault.services.Impl.UserServiceImpl;
 import com.objectvault.objectvault.services.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +26,11 @@ public class AuthController {
             produces= MediaType.APPLICATION_JSON_VALUE
     )
     public UserEntity getUsers(@PathVariable @NonNull String id){
-        UserEntity UserEntity;
-        return UserEntity;
+        Optional<UserEntity> user = userService.getUser(id);
+        if(user.isEmpty()){
+            UserEntity userEntity = new UserEntity();
+            return userEntity;
+        }
+        return user.get();
     }
 }

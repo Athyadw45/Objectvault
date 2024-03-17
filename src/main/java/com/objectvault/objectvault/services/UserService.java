@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface UserService {
 
     public Optional<UserEntity> getUser(String id);
-
+    public String register(UserEntity user);
 }

@@ -1,0 +1,28 @@
+
+services:
+
+  mysqlrecomdb:
+    image: mysql:8.3.0
+    container_name: objectvaultdb
+    hostname: objectvaultdb
+    cap_add:
+      - SYS_NICE
+    restart: always
+    env_file:
+      - ./mysqldb/.env
+    ports:
+      - '3306:3306'
+    volumes:
+      - objectvaultdbvolume:/var/lib/mysql
+      - ./mysqldb/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD",  "ping", "-h", "localhost"]
+      interval: 2s
+      timeout: 3s
+      retries: 5
+
+
+  
+volumes:
+  objectvaultdbvolume:
+    driver: local

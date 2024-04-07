@@ -42,3 +42,4 @@ secrets.yml
 .sts4-cache
 .git-hooks/
 .env
+./mysqldb/.env

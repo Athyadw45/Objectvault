@@ -1,12 +1,15 @@
 package com.objectvault.objectvault.services.Impl;
 
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import io.minio.UploadObjectArgs;
+import com.objectvault.objectvault.dto.ListFilesDTO;
+import com.objectvault.objectvault.dto.ListFilesResponseDTO;
+import io.minio.*;
+import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +35,36 @@ public class MinioService {
             log.error("Error uploading File",e);
 
         }
+    }
+    public ListFilesResponseDTO listFiles(String user){
+        try {
+            Iterable<Result<Item>> results = minioClient.listObjects(
+                    ListObjectsArgs.builder()
+                            .bucket(user)
+                            .maxKeys(100)
+                            .build());
+            List<ListFilesDTO> objectlist = new ArrayList<>();
+
+            for (Result<Item> result : results) {
+                    Item item = result.get();
+                ListFilesDTO listFilesDTO = ListFilesDTO.builder()
+                        .name(item.objectName())
+                        .isDir(item.isDir())
+                        .size(String.valueOf(item.size()))
+                        .lastModified(String.valueOf(item.lastModified()))
+                        .build();
+
+                objectlist.add(listFilesDTO);
+            }
+            return ListFilesResponseDTO.builder()
+                    .objectList(objectlist)
+                    .build();
+
+
+        }catch (Exception e){
+            log.error("Cannot retrive files from"+user,e);
+
+        }
+        return null;
     }
 }

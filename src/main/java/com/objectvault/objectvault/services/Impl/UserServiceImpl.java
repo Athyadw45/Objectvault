@@ -5,6 +5,7 @@ import com.objectvault.objectvault.dto.RegisterUserDTO;
 import com.objectvault.objectvault.entity.UserEntity;
 import com.objectvault.objectvault.repositories.UserRepo;
 import com.objectvault.objectvault.services.UserService;
+import io.minio.MinioClient;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,8 +27,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-
-
+    
     @Override
     public Optional<UserEntity> getUser(String id) {
         return userRepo.findByUserid(id);

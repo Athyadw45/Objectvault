@@ -47,7 +47,7 @@ public class AuthController {
     )
 
     public ResponseEntity<String> registerUser(@RequestBody RegisterUserDTO registerUserDTO
-                               ){
+    ){
         String registerResponse=userService.register(registerUserDTO);
 
         return "User saved".equals(registerResponse)

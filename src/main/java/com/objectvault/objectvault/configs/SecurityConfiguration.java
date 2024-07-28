@@ -30,10 +30,12 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        List<String> whitelist = List.of("/auth/**","/v1/upload-file");
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**")
+                .requestMatchers("/auth/**","/v1/upload-file")
+
                 .permitAll()
                 .anyRequest()
                 .authenticated()

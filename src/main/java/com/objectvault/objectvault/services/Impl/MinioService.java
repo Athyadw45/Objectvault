@@ -14,19 +14,17 @@ import org.springframework.stereotype.Service;
 public class MinioService {
     private final MinioClient minioClient;
 
-    public void uploadFile(){
+    public void uploadFile(String user){
         try{
             boolean found =
-                    minioClient.bucketExists(BucketExistsArgs.builder().bucket("asiatrip").build());
+                    minioClient.bucketExists(BucketExistsArgs.builder().bucket(user).build());
             if (!found) {
                 // Make a new bucket called 'asiatrip'.
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket("asiatrip").build());
-            } else {
-                System.out.println("Bucket 'asiatrip' already exists.");
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(user).build());
             }
             minioClient.uploadObject(
                     UploadObjectArgs.builder()
-                            .bucket("asiatrip")
+                            .bucket(user)
                             .object("asiaphotos-2015.zip")
                             .filename("/home/superblazer/Downloads/qr-code.png")
                             .build());

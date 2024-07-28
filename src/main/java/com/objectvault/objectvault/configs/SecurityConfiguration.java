@@ -34,7 +34,7 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**","/v1/upload-file")
+                .requestMatchers("/auth/**")
 
                 .permitAll()
                 .anyRequest()

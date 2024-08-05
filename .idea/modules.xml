@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/objectvault.iml" filepath="$PROJECT_DIR$/.idea/modules/objectvault.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/objectvault.main.iml" filepath="$PROJECT_DIR$/.idea/modules/objectvault.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/objectvault.test.iml" filepath="$PROJECT_DIR$/.idea/modules/objectvault.test.iml" />
     </modules>

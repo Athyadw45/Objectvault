@@ -11,7 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,13 +21,11 @@ public class ObjectStoreController {
     private final MinioService minioService;
 
     @PostMapping(
-            path= "/v1/upload-file",
-            headers="accept="+ MediaType.APPLICATION_JSON_VALUE,
-            produces= MediaType.APPLICATION_JSON_VALUE
+            path= "/v1/upload-file"
     )
-    public ResponseEntity<String> uploadFile(){
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file){
         String userId= getUser();
-        minioService.uploadFile(userId);
+        minioService.uploadFile(userId,file);
         return ResponseEntity.ok("File uploaded successfully");
     }
 

@@ -15,3 +15,16 @@ To build and run springboot application
 ```sh
 ./gradlew clean build bootRun 
 ```
+
+## 📦 Technology Stack
+- SpringBoot(Java)
+- SQL
+- Minio
+- Docker
+- Postman
+
+
+## 🏗️ Architecture
+
+
+![sysarch](assets/s3.drawio.png?raw=true "sysarch")**

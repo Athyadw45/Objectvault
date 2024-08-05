@@ -7,6 +7,7 @@ import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class MinioService {
     private final MinioClient minioClient;
 
-    public void uploadFile(String user){
+    public void uploadFile(String user, MultipartFile multipartFile){
         try{
             boolean found =
                     minioClient.bucketExists(BucketExistsArgs.builder().bucket(user).build());
@@ -25,12 +26,19 @@ public class MinioService {
                 // Make a new bucket called 'asiatrip'.
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(user).build());
             }
-            minioClient.uploadObject(
-                    UploadObjectArgs.builder()
-                            .bucket(user)
-                            .object("asiaphotos-2015.zip")
-                            .filename("/home/superblazer/Downloads/qr-code.png")
-                            .build());
+            PutObjectArgs putObjectArgs = PutObjectArgs.builder()
+                    .bucket(user)
+                    .object("newFile")
+                    .contentType(multipartFile.getContentType())
+                    .stream(multipartFile.getInputStream(),multipartFile.getSize(), -1)
+                    .build();
+            minioClient.putObject(putObjectArgs);
+//            minioClient.uploadObject(
+//                    UploadObjectArgs.builder()
+//                            .bucket(user)
+//                            .object("testfile")
+//                            .filename("/home/superblazer/Downloads/test01/self_declaration.pdf")
+//                            .build());
         }catch (Exception e){
             log.error("Error uploading File",e);
 

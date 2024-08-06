@@ -28,7 +28,7 @@ public class MinioService {
             }
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .bucket(user)
-                    .object("newFile")
+                    .object(multipartFile.getOriginalFilename())
                     .contentType(multipartFile.getContentType())
                     .stream(multipartFile.getInputStream(),multipartFile.getSize(), -1)
                     .build();

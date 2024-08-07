@@ -33,12 +33,6 @@ public class MinioService {
                     .stream(multipartFile.getInputStream(),multipartFile.getSize(), -1)
                     .build();
             minioClient.putObject(putObjectArgs);
-//            minioClient.uploadObject(
-//                    UploadObjectArgs.builder()
-//                            .bucket(user)
-//                            .object("testfile")
-//                            .filename("/home/superblazer/Downloads/test01/self_declaration.pdf")
-//                            .build());
         }catch (Exception e){
             log.error("Error uploading File",e);
 

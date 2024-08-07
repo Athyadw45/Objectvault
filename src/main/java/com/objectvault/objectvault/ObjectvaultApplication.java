@@ -11,6 +11,5 @@ public class ObjectvaultApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ObjectvaultApplication.class, args);
 
-		System.out.println("Hello...Atharva Here");
 	}
 }

@@ -41,9 +41,34 @@ services:
       timeout: 5s
       retries: 5
 
+  #springboot container
+  objectvault:
+    container_name: objectvault
+    depends_on:
+      - mysqlrecomdb
+      - minio
+    build: .
+    restart: unless-stopped
+    environment:
+      - DB_ENDPOINT=mysqlrecomdb
+      - DB_PORT=${DB_PORT}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_CLIENT_USERNAME=${MINIO_CLIENT_USERNAME}
+      - MINIO_CLIENT_PASSWORD=${MINIO_CLIENT_PASSWORD}
+      - MINIO_SERVER_ENDPOINT=minio
+    ports:
+      - 3001:8080
+
 volumes:
   objectvaultdbvolume:
     driver: local
 
   minio-data:
     driver: local
+
+

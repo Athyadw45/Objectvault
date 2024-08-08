@@ -3,14 +3,20 @@ package com.objectvault.objectvault.services.Impl;
 import com.objectvault.objectvault.dto.ListFilesDTO;
 import com.objectvault.objectvault.dto.ListFilesResponseDTO;
 import io.minio.*;
+import io.minio.http.Method;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -49,11 +55,25 @@ public class MinioService {
 
             for (Result<Item> result : results) {
                     Item item = result.get();
+                Map<String, String> reqParams = new HashMap<String, String>();
+//                reqParams.put("response-content-type", "application/json");
+                String contentDisposition = URLEncoder.encode("attachment; filename=\"%s\"".formatted(item.objectName()), StandardCharsets.UTF_8);
+                reqParams.put("response-content-disposition",contentDisposition);
+                String url =
+                        minioClient.getPresignedObjectUrl(
+                                GetPresignedObjectUrlArgs.builder()
+                                        .method(Method.GET)
+                                        .bucket(user)
+                                        .object(item.objectName())
+                                        .expiry(2, TimeUnit.HOURS)
+                                        .extraQueryParams(reqParams)
+                                        .build());
                 ListFilesDTO listFilesDTO = ListFilesDTO.builder()
                         .name(item.objectName())
                         .isDir(item.isDir())
                         .size(String.valueOf(item.size()))
                         .lastModified(String.valueOf(item.lastModified()))
+                        .url(url)
                         .build();
 
                 objectlist.add(listFilesDTO);

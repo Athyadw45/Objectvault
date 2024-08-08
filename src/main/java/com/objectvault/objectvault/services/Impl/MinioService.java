@@ -7,6 +7,8 @@ import io.minio.http.Method;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class MinioService {
     private final MinioClient minioClient;
+    @Value("${minio.server.endpoint}")
+    private String minio_endpoint;
 
     public void uploadFile(String user, MultipartFile multipartFile){
         try{
@@ -55,25 +59,13 @@ public class MinioService {
 
             for (Result<Item> result : results) {
                     Item item = result.get();
-                Map<String, String> reqParams = new HashMap<String, String>();
-//                reqParams.put("response-content-type", "application/json");
-                String contentDisposition = URLEncoder.encode("attachment; filename=\"%s\"".formatted(item.objectName()), StandardCharsets.UTF_8);
-                reqParams.put("response-content-disposition",contentDisposition);
-                String url =
-                        minioClient.getPresignedObjectUrl(
-                                GetPresignedObjectUrlArgs.builder()
-                                        .method(Method.GET)
-                                        .bucket(user)
-                                        .object(item.objectName())
-                                        .expiry(2, TimeUnit.HOURS)
-                                        .extraQueryParams(reqParams)
-                                        .build());
+
                 ListFilesDTO listFilesDTO = ListFilesDTO.builder()
                         .name(item.objectName())
                         .isDir(item.isDir())
                         .size(String.valueOf(item.size()))
                         .lastModified(String.valueOf(item.lastModified()))
-                        .url(url)
+                        .url(getFinalUrl(item,user))
                         .build();
 
                 objectlist.add(listFilesDTO);
@@ -88,5 +80,23 @@ public class MinioService {
 
         }
         return null;
+    }
+
+    private String getFinalUrl(Item item, String user) throws Exception{
+        Map<String, String> reqParams = new HashMap<String, String>();
+        String contentDisposition = URLEncoder.encode("attachment; filename=\"%s\"".formatted(item.objectName()), StandardCharsets.UTF_8);
+        reqParams.put("response-content-disposition",contentDisposition);
+        String url =
+                minioClient.getPresignedObjectUrl(
+                        GetPresignedObjectUrlArgs.builder()
+                                .method(Method.GET)
+                                .bucket(user)
+                                .object(item.objectName())
+                                .expiry(2, TimeUnit.HOURS)
+                                .extraQueryParams(reqParams)
+                                .build());
+
+       return "http://" + minio_endpoint + url.substring(StringUtils.ordinalIndexOf(url,":", 2));
+
     }
 }

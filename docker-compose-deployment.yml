@@ -47,7 +47,7 @@ services:
     depends_on:
       - mysqlrecomdb
       - minio
-    image: athyadw45/objectvault:objectvaul_latest
+    image: athyadw45/objectvault:objectvault_latest
     restart: unless-stopped
     environment:
       - DB_ENDPOINT=mysqlrecomdb

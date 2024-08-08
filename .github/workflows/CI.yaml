@@ -51,4 +51,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: athyadw45/objectvault:objectvaul_latest
+          tags: athyadw45/objectvault:objectvault_latest

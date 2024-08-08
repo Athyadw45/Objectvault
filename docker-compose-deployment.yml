@@ -1,0 +1,74 @@
+version: '3.7'
+
+services:
+
+  # MySQL Service
+  mysqlrecomdb:
+    image: mysql:8.3.0
+    container_name: objectvaultdb
+    hostname: objectvaultdb
+    cap_add:
+      - SYS_NICE
+    restart: always
+    env_file:
+      - ./mysqldb/.env
+    ports:
+      - '3306:3306'
+    volumes:
+      - objectvaultdbvolume:/var/lib/mysql
+      - ./mysqldb/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD", "ping", "-h", "localhost"]
+      interval: 2s
+      timeout: 3s
+      retries: 5
+
+  # MinIO Service
+  minio:
+    image: quay.io/minio/minio:RELEASE.2024-07-04T14-25-45Z
+    command: server /data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  #springboot container
+  objectvault:
+    container_name: objectvault
+    depends_on:
+      - mysqlrecomdb
+      - minio
+    image: athyadw45/objectvault:objectvaul_latest
+    restart: unless-stopped
+    environment:
+      - DB_ENDPOINT=mysqlrecomdb
+      - DB_PORT=${DB_PORT}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_CLIENT_USERNAME=${MINIO_CLIENT_USERNAME}
+      - MINIO_CLIENT_PASSWORD=${MINIO_CLIENT_PASSWORD}
+      - MINIO_SERVER_ENDPOINT=${MINIO_SERVER_ENDPOINT}
+    ports:
+      - 3001:8080
+
+volumes:
+  objectvaultdbvolume:
+    driver: local
+
+  minio-data:
+    driver: local
+
+

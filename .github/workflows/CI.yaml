@@ -17,6 +17,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: maven
+          cache: gradle
       - name: Build with Gradle
         run: ./gradlew clean build

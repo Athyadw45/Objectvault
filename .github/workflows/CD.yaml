@@ -1,0 +1,24 @@
+name: Deployment
+
+on:
+  workflow_run:
+    workflows: ["CI workflow"]
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  deploy_to_gcp:
+    name: Deployment to GCP server
+    runs-on: ubuntu-latest
+
+    steps:
+       - name: executing remote ssh commands using key file
+         uses: appleboy/ssh-action@master
+         with:
+           host: ${{ secrets.GCP_HOST }}
+           username: ${{ secrets.GCP_USERNAME }}
+           key: ${{ secrets.SSH_PRIVATE_KEY }}
+           port: 22
+           script: |
+             echo $HOME

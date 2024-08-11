@@ -3,17 +3,18 @@ package com.objectvault.objectvault.controller;
 import com.objectvault.objectvault.dto.ListFilesResponseDTO;
 import com.objectvault.objectvault.entity.UserEntity;
 import com.objectvault.objectvault.services.Impl.MinioService;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,6 +44,19 @@ public class ObjectStoreController {
         }
         return ResponseEntity.internalServerError().body(ListFilesResponseDTO.builder().build());
 
+    }
+
+    @DeleteMapping(
+            path= "/v1/deleteobject/{filename}"
+    )
+    public ResponseEntity<String> deleteObject(@PathVariable ("filename") String filename){
+        String userId= getUser();
+       Optional<String> deleteStatus =  minioService.deleteObject(userId,filename);
+//        return (deleteStatus.isPresent()?){
+//           return ResponseEntity.ok(deleteStatus.get())
+        return deleteStatus.isPresent()
+                ?ResponseEntity.ok(deleteStatus.get())
+                :ResponseEntity.status(HttpStatus.NOT_FOUND).body("Unable to delete file "+filename);
     }
 
 

@@ -7,6 +7,7 @@ import io.minio.http.Method;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -79,7 +77,20 @@ public class MinioService {
             log.error("Cannot retrive files from"+user,e);
 
         }
-        return null;
+        return ListFilesResponseDTO.builder()
+                .objectList(List.of())
+                .build();
+    }
+    public Optional<String> deleteObject(String user , String object){
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder().bucket(user).object(object).build());
+            return Optional.of(object +" deleted successfully");
+        }catch (Exception e){
+            log.error("Exception while deleting object "+object,e);
+            return Optional.empty();
+        }
+
     }
 
     private String getFinalUrl(Item item, String user) throws Exception{
@@ -99,4 +110,6 @@ public class MinioService {
        return "http://" + minio_endpoint + url.substring(StringUtils.ordinalIndexOf(url,":", 2));
 
     }
+
+
 }

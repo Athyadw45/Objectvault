@@ -35,7 +35,6 @@ public class SecurityConfiguration {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/**")
-
                 .permitAll()
                 .anyRequest()
                 .authenticated()

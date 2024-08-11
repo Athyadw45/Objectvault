@@ -22,3 +22,12 @@ jobs:
            port: 22
            script: |
              echo $HOME
+             cd $HOME
+             cd Objectvault
+             git pull -r
+             docker compose -f docker-compose-deployment.yml stop objectvault
+             docker compose -f docker-compose-deployment.yml rm -f objectvault
+             docker compose -f docker-compose-deployment.yml pull objectvault
+             docker compose -f docker-compose-deployment.yml up -d objectvault
+             
+             

@@ -64,7 +64,7 @@ public class AuthController {
             LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
                     .jwtToken(jwtToken)
                     .token_expiration(jwtService.getExpirationTime())
-                    .message("login success!")
+                    .message("login successful!")
                     .build();
 
 

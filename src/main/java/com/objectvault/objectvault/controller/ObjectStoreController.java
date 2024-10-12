@@ -1,6 +1,7 @@
 package com.objectvault.objectvault.controller;
 
 import com.objectvault.objectvault.dto.ListFilesResponseDTO;
+import com.objectvault.objectvault.dto.MinioUploadDTO;
 import com.objectvault.objectvault.entity.UserEntity;
 import com.objectvault.objectvault.services.Impl.MinioService;
 import jakarta.websocket.server.PathParam;
@@ -26,8 +27,11 @@ public class ObjectStoreController {
     )
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file){
         String userId= getUser();
-        minioService.uploadFile(userId,file);
-        return ResponseEntity.ok("File uploaded successfully");
+        MinioUploadDTO upload_status=minioService.uploadFile(userId,file);
+        if(!upload_status.success()){
+            return ResponseEntity.internalServerError().body(upload_status.message());
+        }
+        return ResponseEntity.ok(upload_status.message());
     }
 
     @GetMapping(
@@ -52,14 +56,11 @@ public class ObjectStoreController {
     public ResponseEntity<String> deleteObject(@PathVariable ("filename") String filename){
         String userId= getUser();
        Optional<String> deleteStatus =  minioService.deleteObject(userId,filename);
-//        return (deleteStatus.isPresent()?){
-//           return ResponseEntity.ok(deleteStatus.get())
+
         return deleteStatus.isPresent()
                 ?ResponseEntity.ok(deleteStatus.get())
                 :ResponseEntity.status(HttpStatus.NOT_FOUND).body("Unable to delete file "+filename);
     }
-
-
 
     public String getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

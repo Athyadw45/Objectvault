@@ -2,6 +2,7 @@ package com.objectvault.objectvault.services.Impl;
 
 import com.objectvault.objectvault.dto.ListFilesDTO;
 import com.objectvault.objectvault.dto.ListFilesResponseDTO;
+import com.objectvault.objectvault.dto.MinioUploadDTO;
 import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Item;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +28,7 @@ public class MinioService {
     @Value("${minio.server.endpoint}")
     private String minio_endpoint;
 
-    public void uploadFile(String user, MultipartFile multipartFile){
+    public MinioUploadDTO uploadFile(String user, MultipartFile multipartFile){
         try{
             boolean found =
                     minioClient.bucketExists(BucketExistsArgs.builder().bucket(user).build());
@@ -41,9 +43,18 @@ public class MinioService {
                     .stream(multipartFile.getInputStream(),multipartFile.getSize(), -1)
                     .build();
             minioClient.putObject(putObjectArgs);
+
+            return MinioUploadDTO.builder()
+                    .success(true)
+                    .message("Successfully uploaded "+multipartFile.getOriginalFilename())
+                    .build();
+
         }catch (Exception e){
             log.error("Error uploading File",e);
-
+            return MinioUploadDTO.builder()
+                    .success(false)
+                    .message("File upload failed "+e.getMessage())
+                    .build();
         }
     }
     public ListFilesResponseDTO listFiles(String user){

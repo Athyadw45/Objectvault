@@ -1,3 +1,4 @@
+/* (C) 2024 */
 package com.objectvault.objectvault;
 
 import org.springframework.boot.SpringApplication;
@@ -8,8 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableAutoConfiguration
 public class ObjectvaultApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ObjectvaultApplication.class, args);
-
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(ObjectvaultApplication.class, args);
+  }
 }

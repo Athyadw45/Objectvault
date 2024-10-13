@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.2.3'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id "org.springdoc.openapi-gradle-plugin" version "1.8.0"
+	id("com.diffplug.spotless") version "6.25.0"
 }
 
 group = 'com.objectvault'
@@ -50,4 +51,22 @@ tasks.named('test') {
 }
 bootRun {
 
+}
+
+spotless {
+	java {
+		// Use the default importOrder configuration
+		importOrder()
+		removeUnusedImports()
+
+		// Cleanthat will refactor your code, but it may break your style: apply it before your formatter
+		cleanthat()          // has its own section below
+
+		// Choose one of these formatters.
+		googleJavaFormat()   // has its own section below
+
+		formatAnnotations()  // fixes formatting of type annotations, see below
+
+		licenseHeader '/* (C) $YEAR */' // or licenseHeaderFile
+	}
 }

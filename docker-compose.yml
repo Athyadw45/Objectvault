@@ -64,6 +64,22 @@ services:
     ports:
       - 3001:3001
 
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3001/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  streamlit_ui:
+    image: athyadw45/objectvault:streamlit_latest
+    container_name: streamlit_ui
+    depends_on:
+      objectvault:
+        condition: service_healthy
+    restart: on-failure
+    ports:
+      - 8501:8501
+
 volumes:
   objectvaultdbvolume:
     driver: local

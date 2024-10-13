@@ -45,10 +45,20 @@ jobs:
         with:
          images: athyadw45/objectvault
 
-      - name: Build and push Objectvault
+      - name: Build and push Objectvault Springboot
         uses: docker/build-push-action@v3
         with:
           context: .
           file: ./Dockerfile
           push: true
           tags: athyadw45/objectvault:objectvault_latest
+
+
+      - name: Build and push Streamlit UI
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./streamlit-ui/Dockerfile
+          push: true
+          tags: athyadw45/objectvault:streamlit_latest
+

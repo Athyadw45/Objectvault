@@ -29,5 +29,9 @@ if st.button("Log in", type="primary"):
     if login_user_success(email,password):
         st.switch_page("pages/page1.py")
 
+if st.button("Register", type="primary"):
+    st.switch_page("pages/register_page.py")
+
+
 
 

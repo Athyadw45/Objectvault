@@ -62,7 +62,16 @@ services:
       - MINIO_CLIENT_PASSWORD=${MINIO_CLIENT_PASSWORD}
       - MINIO_SERVER_ENDPOINT=${MINIO_SERVER_ENDPOINT}
     ports:
-      - 3001:8080
+      - 3001:3001
+
+  streamlit_ui:
+    image: athyadw45/objectvault:streamlit_latest
+    container_name: streamlit_ui
+    depends_on:
+      - objectvault
+    restart: on-failure
+    ports:
+      - 8501:8501
 
 volumes:
   objectvaultdbvolume:

@@ -1,7 +1,9 @@
 from navigation import make_sidebar
 import streamlit as st
 import requests
-import pandas as pd
+from constants import getConstants
+
+env=getConstants()
 
 make_sidebar()
 
@@ -10,7 +12,7 @@ uploaded_file = st.file_uploader("Choose a file")
 filesList = None
 
 def list_files():
-    endpoint="http://35.208.81.217:3001/v1/list-files"
+    endpoint=f'{env["HOST"]}/v1/list-files'
     headers={"Authorization":f"Bearer {jwt_token}"}
     r = requests.get(url=endpoint,headers=headers)
 
@@ -23,7 +25,7 @@ def list_files():
 
 def upload_file(uploaded_file):
     
-    endpoint="http://35.208.81.217:3001/v1/upload-file"
+    endpoint=f'{env["HOST"]}/v1/upload-file'
     headers={"Authorization":f"Bearer {jwt_token}"}
     content_type = uploaded_file.type
     files = {'file': (uploaded_file.name, uploaded_file.getvalue(), content_type)}

@@ -1,6 +1,9 @@
 import streamlit as st
 import requests
 import time
+from constants import getConstants
+
+env=getConstants()
 
 st.title("Create an account")
 
@@ -15,7 +18,7 @@ def register_user(firstname,lastname,email,password):
         st.warning("Please check if all the fields are populated")
         return False
 
-    r = requests.post('http://35.208.81.217:3001/auth/register', json={'firstname': firstname,'lastname': lastname,'email': email,'password':password})
+    r = requests.post(f'{env["HOST"]}/auth/register', json={'firstname': firstname,'lastname': lastname,'email': email,'password':password})
     
     if r.status_code != 200:
         st.warning("Unable to register \n"+str(r.content))

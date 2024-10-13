@@ -2,6 +2,10 @@ import streamlit as st
 from time import sleep
 from navigation import make_sidebar
 import requests
+from constants import getConstants
+
+env=getConstants()
+
 
 make_sidebar()
 
@@ -13,7 +17,7 @@ email = st.text_input("email")
 password = st.text_input("Password", type="password")
 
 def login_user_success(email,password):
-    r = requests.post('http://35.208.81.217:3001/auth/login', json={'email': email,'password':password})
+    r = requests.post(f'{env["HOST"]}/auth/login', json={'email': email,'password':password})
     if r.status_code==200:
         jwt_token=r.json()['jwtToken']
         st.session_state.logged_in = True

@@ -26,14 +26,12 @@ jobs:
              cd Objectvault
              git pull -r
              . ./setLocalEnv.sh
-             docker compose -f docker-compose-deployment.yml stop objectvault
-             docker compose -f docker-compose-deployment.yml rm -f objectvault
-             docker compose -f docker-compose-deployment.yml pull objectvault
-             docker compose -f docker-compose-deployment.yml up -d objectvault
-             docker compose -f docker-compose-deployment.yml stop streamlit_ui
-             docker compose -f docker-compose-deployment.yml rm -f streamlit_ui
-             docker compose -f docker-compose-deployment.yml pull streamlit_ui
-             docker compose -f docker-compose-deployment.yml up -d streamlit_ui
+             docker compose -f docker-compose-deployment.yml stop objectvault streamlit_ui
+             docker compose -f docker-compose-deployment.yml rm -f objectvault streamlit_ui
+             docker system prune -a -f --volumes
+             docker compose -f docker-compose-deployment.yml pull objectvault streamlit_ui
+             docker compose -f docker-compose-deployment.yml up -d objectvault streamlit_ui
+             docker ps
              
              
              

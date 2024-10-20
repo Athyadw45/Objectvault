@@ -4,6 +4,7 @@ import requests
 from constants import getConstants
 
 env=getConstants()
+objectvault_base_url= f'http://{env["OBJECTVAULT_HOST"]}:{env["OBJECTVAULT_PORT"]}'
 
 make_sidebar()
 
@@ -12,7 +13,7 @@ uploaded_file = st.file_uploader("Choose a file")
 filesList = None
 
 def list_files():
-    endpoint=f'{env["HOST"]}/v1/list-files'
+    endpoint=f'{objectvault_base_url}/v1/list-files'
     headers={"Authorization":f"Bearer {jwt_token}"}
     r = requests.get(url=endpoint,headers=headers)
 
@@ -25,7 +26,7 @@ def list_files():
 
 def upload_file(uploaded_file):
     
-    endpoint=f'{env["HOST"]}/v1/upload-file'
+    endpoint=f'{objectvault_base_url}/v1/upload-file'
     headers={"Authorization":f"Bearer {jwt_token}"}
     content_type = uploaded_file.type
     files = {'file': (uploaded_file.name, uploaded_file.getvalue(), content_type)}

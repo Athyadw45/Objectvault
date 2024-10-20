@@ -4,6 +4,8 @@ import time
 from constants import getConstants
 
 env=getConstants()
+objectvault_base_url= f'http://{env["OBJECTVAULT_HOST"]}:{env["OBJECTVAULT_PORT"]}'
+
 
 st.title("Create an account")
 
@@ -18,7 +20,7 @@ def register_user(firstname,lastname,email,password):
         st.warning("Please check if all the fields are populated")
         return False
 
-    r = requests.post(f'{env["HOST"]}/auth/register', json={'firstname': firstname,'lastname': lastname,'email': email,'password':password})
+    r = requests.post(f'{objectvault_base_url}/auth/register', json={'firstname': firstname,'lastname': lastname,'email': email,'password':password})
     
     if r.status_code != 200:
         st.warning("Unable to register \n"+str(r.content))

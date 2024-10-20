@@ -2,5 +2,7 @@ import os
 
 def getConstants():
     constants = {}
-    constants["HOST"] = "http://localhost:3001"
+    constants["OBJECTVAULT_HOST"] = os.environ.get('OBJECTVAULT_HOST', 'localhost')
+    constants["OBJECTVAULT_PORT"] = os.environ.get('OBJECTVAULT_PORT', '3001')
+
     return constants

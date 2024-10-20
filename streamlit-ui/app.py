@@ -5,6 +5,7 @@ import requests
 from constants import getConstants
 
 env=getConstants()
+objectvault_base_url= f'http://{env["OBJECTVAULT_HOST"]}:{env["OBJECTVAULT_PORT"]}'
 
 
 make_sidebar()
@@ -15,9 +16,8 @@ st.write("Please log in to continue")
 
 email = st.text_input("email")
 password = st.text_input("Password", type="password")
-
 def login_user_success(email,password):
-    r = requests.post(f'{env["HOST"]}/auth/login', json={'email': email,'password':password})
+    r = requests.post(f'{objectvault_base_url}/auth/login', json={'email': email,'password':password})
     if r.status_code==200:
         jwt_token=r.json()['jwtToken']
         st.session_state.logged_in = True
@@ -35,7 +35,6 @@ if st.button("Log in", type="primary"):
 
 if st.button("Register", type="primary"):
     st.switch_page("pages/register_page.py")
-
 
 
 

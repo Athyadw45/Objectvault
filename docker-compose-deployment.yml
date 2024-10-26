@@ -3,10 +3,10 @@ version: '3.8'
 services:
 
   # MySQL Service
-  mysqlrecomdb:
+  mysqldb:
     image: mysql:8.3.0
-    container_name: objectvaultdb
-    hostname: objectvaultdb
+    container_name: mysqldb
+    hostname: mysqldb
     cap_add:
       - SYS_NICE
     restart: always
@@ -45,12 +45,12 @@ services:
   objectvault:
     container_name: objectvault
     depends_on:
-      - mysqlrecomdb
+      - mysqldb
       - minio
     image: athyadw45/objectvault:objectvault_latest
     restart: unless-stopped
     environment:
-      - DB_ENDPOINT=mysqlrecomdb
+      - DB_ENDPOINT=mysqldb
       - DB_PORT=${DB_PORT}
       - DATABASE_NAME=${DATABASE_NAME}
       - DB_USERNAME=${DB_USERNAME}
@@ -73,9 +73,6 @@ services:
   streamlit_ui:
     image: athyadw45/objectvault:streamlit_latest
     container_name: streamlit_ui
-    depends_on:
-      objectvault:
-        condition: service_healthy
     restart: on-failure
     env_file: ".env"
     ports:

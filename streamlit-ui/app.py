@@ -31,7 +31,7 @@ def login_user_success(email,password):
 
 if st.button("Log in", type="primary"):
     if login_user_success(email,password):
-        st.switch_page("pages/page1.py")
+        st.switch_page("pages/dashboard.py")
 
 if st.button("Register", type="primary"):
     st.switch_page("pages/register_page.py")

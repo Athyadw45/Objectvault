@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,30 @@ public class MinioService {
 
   public MinioUploadDTO uploadFile(String user, MultipartFile multipartFile) {
     try {
+
+      if (multipartFile.getSize() / (1024 * 1024) > 5) {
+        return MinioUploadDTO.builder()
+            .success(false)
+            .message(
+                "Filesize exceeds allowed limit of 5MB, actual size:" + multipartFile.getSize())
+            .build();
+      }
+
       boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(user).build());
       if (!found) {
-        // Make a new bucket called 'asiatrip'.
         minioClient.makeBucket(MakeBucketArgs.builder().bucket(user).build());
       }
+
+      Iterable<Result<Item>> results =
+          minioClient.listObjects(ListObjectsArgs.builder().bucket(user).maxKeys(100).build());
+
+      if (IterableUtils.size(results) > 10) {
+        return MinioUploadDTO.builder()
+            .success(false)
+            .message("Max files count limit reached, delete old files to upload new")
+            .build();
+      }
+
       PutObjectArgs putObjectArgs =
           PutObjectArgs.builder()
               .bucket(user)
@@ -41,6 +61,7 @@ public class MinioService {
               .contentType(multipartFile.getContentType())
               .stream(multipartFile.getInputStream(), multipartFile.getSize(), -1)
               .build();
+
       minioClient.putObject(putObjectArgs);
 
       return MinioUploadDTO.builder()

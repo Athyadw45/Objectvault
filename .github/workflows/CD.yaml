@@ -24,6 +24,7 @@ jobs:
              echo $HOME
              cd $HOME
              cd Objectvault
+             git checkout -- .
              git pull -r
              . ./setLocalEnv.sh
              docker compose -f docker-compose-deployment.yml stop objectvault streamlit_ui

@@ -28,7 +28,7 @@ jobs:
              . ./setLocalEnv.sh
              docker compose -f docker-compose-deployment.yml stop objectvault streamlit_ui
              docker compose -f docker-compose-deployment.yml rm -f objectvault streamlit_ui
-             docker system prune -a -f --volumes
+             docker system prune -a -f
              docker compose -f docker-compose-deployment.yml pull objectvault streamlit_ui
              docker compose -f docker-compose-deployment.yml up -d objectvault streamlit_ui
              docker ps

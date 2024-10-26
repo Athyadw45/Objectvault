@@ -35,7 +35,9 @@ public class MinioService {
         return MinioUploadDTO.builder()
             .success(false)
             .message(
-                "Filesize exceeds allowed limit of 5MB, actual size:" + multipartFile.getSize())
+                "Filesize exceeds allowed limit of 5MB, actual size:"
+                    + multipartFile.getSize() / (1024 * 1024)
+                    + " MB")
             .build();
       }
 

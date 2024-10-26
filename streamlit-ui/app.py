@@ -26,7 +26,7 @@ def login_user_success(email,password):
     else:
         print(r.raw)
         print(r.status_code)
-        st.error("Unable to login :( check credentials or internet connections)\n"+str(r.raw)+"\nstatus code "+r.status_code)
+        st.error("Unable to login :( check credentials or internet connections)\n"+str(r.raw)+"\nstatus code "+str(r.status_code))
         return False
 
 if st.button("Log in", type="primary"):

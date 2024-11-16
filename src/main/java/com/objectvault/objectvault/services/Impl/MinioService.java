@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -80,6 +81,7 @@ public class MinioService {
     }
   }
 
+  @Cacheable(cacheManager = "defaultCacheManager", value = "listFilesCache", key = "#user")
   public ListFilesResponseDTO listFiles(String user) {
     try {
       Iterable<Result<Item>> results =

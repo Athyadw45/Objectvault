@@ -77,7 +77,9 @@ services:
 #      objectvault:
 #        condition: service_healthy
     restart: on-failure
-    env_file: ".env"
+    environment:
+      OBJECTVAULT_HOST: 172.17.0.1
+      OBJECTVAULT_PORT: 3001
     ports:
       - 8501:8501
 
